@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: nodedav
+      POSTGRES_PASSWORD: nodedav
+      POSTGRES_DB: nodedav
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      # PostgreSQL 18 images keep data in a major-version subdirectory of /var/lib/postgresql
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nodedav"]
+      interval: 5s
+      retries: 10
+
+  app:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://nodedav:nodedav@db:5432/nodedav
+      # Optional: creates this admin on first start (only while there are no users).
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      # Keeps admin UI sessions valid across restarts; use a long random string.
+      SESSION_SECRET: ${SESSION_SECRET:-}
+    ports:
+      - "8800:8800"
+
+volumes:
+  pgdata:

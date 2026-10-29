@@ -1,0 +1,19 @@
+{
+  "name": "nodedav",
+  "version": "0.1.0",
+  "description": "A lightweight CalDAV/CardDAV server for Node.js 24 and PostgreSQL 18 (a Baikal / sabre/dav alternative)",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "admin": "node src/cli.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "pg": "^8.16.0"
+  }
+}
